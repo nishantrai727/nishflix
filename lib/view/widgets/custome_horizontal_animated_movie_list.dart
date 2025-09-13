@@ -79,7 +79,7 @@ class _AnimatedHorizontalListState extends State<AnimatedHorizontalList>
   Widget _movieCard(MovieModel movie, {double leftMargin = 0}) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/detail', arguments: movie);
+        Navigator.pushNamed(context, '/detail', arguments: movie.id);
       },
       child: Container(
         margin: EdgeInsets.only(left: leftMargin),

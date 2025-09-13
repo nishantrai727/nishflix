@@ -90,93 +90,102 @@ class _FeaturedMovieCarouselState extends State<FeaturedMovieCarousel> {
   }
 
   Widget _movieCard(MovieModel movie) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.8),
-            blurRadius: 30, // spread out more
-            spreadRadius: -10, // reduces top/sides
-            offset: const Offset(0, 40), // push shadow down
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: Stack(
-          children: [
-            // Poster image
-            Positioned.fill(
-              child: CachedNetworkImage(
-                imageUrl: "https://image.tmdb.org/t/p/w500${movie.posterPath}",
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Shimmer.fromColors(
-                  baseColor: Colors.grey.shade800,
-                  highlightColor: Colors.grey.shade600,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade800,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-                errorWidget: (context, url, error) => Shimmer.fromColors(
-                  baseColor: Colors.grey.shade800,
-                  highlightColor: Colors.grey.shade600,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade800,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(
-                      Icons.broken_image,
-                      color: Colors.white70,
-                      size: 30,
-                    ),
-                  ),
-                ),
-              ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, '/detail', arguments: movie.id);
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.8),
+              blurRadius: 30, // spread out more
+              spreadRadius: -10, // reduces top/sides
+              offset: const Offset(0, 40), // push shadow down
             ),
-
-            // Gradient blur overlay (bottom fade)
-            Positioned.fill(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [Colors.black.withOpacity(0.6), Colors.transparent],
-                  ),
-                ),
-              ),
-            ),
-
-            // Title text (bottom-left aligned)
-            // Positioned(
-            //   left: 8,
-            //   right: 8,
-            //   bottom: -20,
-            //   child: Text(
-            //     movie.title.toUpperCase(),
-            //     maxLines: 1,
-            //     overflow: TextOverflow.fade,
-            //     style: const TextStyle(
-            //       color: Colors.white,
-            //       fontSize: 44,
-            //       fontWeight: FontWeight.w700,
-            //       shadows: [
-            //         Shadow(
-            //           blurRadius: 6,
-            //           color: Colors.black54,
-            //           offset: Offset(0, 2),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
           ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Stack(
+            children: [
+              // Poster image
+              Positioned.fill(
+                child: CachedNetworkImage(
+                  imageUrl:
+                      "https://image.tmdb.org/t/p/w500${movie.posterPath}",
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Shimmer.fromColors(
+                    baseColor: Colors.grey.shade800,
+                    highlightColor: Colors.grey.shade600,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade800,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Shimmer.fromColors(
+                    baseColor: Colors.grey.shade800,
+                    highlightColor: Colors.grey.shade600,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade800,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.broken_image,
+                        color: Colors.white70,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Gradient blur overlay (bottom fade)
+              Positioned.fill(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        Colors.black.withOpacity(0.6),
+                        Colors.transparent,
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Title text (bottom-left aligned)
+              // Positioned(
+              //   left: 8,
+              //   right: 8,
+              //   bottom: -20,
+              //   child: Text(
+              //     movie.title.toUpperCase(),
+              //     maxLines: 1,
+              //     overflow: TextOverflow.fade,
+              //     style: const TextStyle(
+              //       color: Colors.white,
+              //       fontSize: 44,
+              //       fontWeight: FontWeight.w700,
+              //       shadows: [
+              //         Shadow(
+              //           blurRadius: 6,
+              //           color: Colors.black54,
+              //           offset: Offset(0, 2),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+            ],
+          ),
         ),
       ),
     );
