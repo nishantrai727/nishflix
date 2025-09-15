@@ -32,6 +32,76 @@ class MovieDbBloc extends Bloc<MovieDbEvent, MoveieDbState> {
     late final MovieRepository movieRepository;
     movieRepository = MovieRepository(_apiService);
 
+    on<FetchMovieDbEvent>((event, emit) async {
+      final nowPlayingBox = Hive.box<MovieModel>('nowPlayingBox');
+      final popularBox = Hive.box<MovieModel>('popularBox');
+      final topRatedBox = Hive.box<MovieModel>('topRatedBox');
+      final upcomingBox = Hive.box<MovieModel>('upcomingBox');
+
+      try {
+        // 1. Now Playing
+        final nowPlaying = await movieRepository.getNowPlaying();
+        await nowPlayingBox.clear();
+        await nowPlayingBox.addAll(nowPlaying.results);
+        emit(MoveieDbLoading(nowPlayingMovies: nowPlaying.results));
+
+        // 2. Popular
+        final popular = await movieRepository.getPopular();
+        await popularBox.clear();
+        await popularBox.addAll(popular.results);
+        emit(
+          MoveieDbLoading(
+            nowPlayingMovies: nowPlaying.results,
+            popularMovies: popular.results,
+          ),
+        );
+
+        // 3. Top Rated
+        final topRated = await movieRepository.getTopRated();
+        await topRatedBox.clear();
+        await topRatedBox.addAll(topRated.results);
+        emit(
+          MoveieDbLoading(
+            nowPlayingMovies: nowPlaying.results,
+            popularMovies: popular.results,
+            topRatedMovies: topRated.results,
+          ),
+        );
+
+        // 4. Upcoming
+        final upcoming = await movieRepository.getUpcoming();
+        await upcomingBox.clear();
+        await upcomingBox.addAll(upcoming.results);
+
+        // ✅ Final Loaded State
+        emit(
+          MoveieDbLoaded(
+            nowPlayingMovies: nowPlaying.results,
+            popularMovies: popular.results,
+            topRatedMovies: topRated.results,
+            upcomingMovies: upcoming.results,
+          ),
+        );
+      } catch (e) {
+        // 🔄 Fallback to cache if API fails
+        if (nowPlayingBox.isNotEmpty ||
+            popularBox.isNotEmpty ||
+            topRatedBox.isNotEmpty ||
+            upcomingBox.isNotEmpty) {
+          emit(
+            MoveieDbLoaded(
+              nowPlayingMovies: nowPlayingBox.values.toList(),
+              popularMovies: popularBox.values.toList(),
+              topRatedMovies: topRatedBox.values.toList(),
+              upcomingMovies: upcomingBox.values.toList(),
+            ),
+          );
+        } else {
+          emit(MoveieDbError(message: e.toString()));
+        }
+      }
+    });
+
     // on<FetchMovieDbEvent>((event, emit) async {
     //   emit(MoveieDbLoading());
 
@@ -50,104 +120,104 @@ class MovieDbBloc extends Bloc<MovieDbEvent, MoveieDbState> {
     //   );
     // });
 
-    on<FetchMovieDbEvent>((event, emit) async {
-      emit(MoveieDbLoading());
+    // on<FetchMovieDbEvent>((event, emit) async {
+    //   emit(MoveieDbLoading());
 
-      try {
-        // Fetch from API
-        final nowPlaying = await movieRepository.getNowPlaying();
-        final popular = await movieRepository.getPopular();
-        final topRated = await movieRepository.getTopRated();
-        final upcoming = await movieRepository.getUpcoming();
+    //   try {
+    //     // Fetch from API
+    //     final nowPlaying = await movieRepository.getNowPlaying();
+    //     final popular = await movieRepository.getPopular();
+    //     final topRated = await movieRepository.getTopRated();
+    //     final upcoming = await movieRepository.getUpcoming();
 
-        // Hive boxes
-        final nowPlayingBox = Hive.box<MovieModel>('nowPlayingBox');
-        final popularBox = Hive.box<MovieModel>('popularBox');
-        final topRatedBox = Hive.box<MovieModel>('topRatedBox');
-        final upcomingBox = Hive.box<MovieModel>('upcomingBox');
+    //     // Hive boxes
+    //     final nowPlayingBox = Hive.box<MovieModel>('nowPlayingBox');
+    //     final popularBox = Hive.box<MovieModel>('popularBox');
+    //     final topRatedBox = Hive.box<MovieModel>('topRatedBox');
+    //     final upcomingBox = Hive.box<MovieModel>('upcomingBox');
 
-        // Clear old data
-        await nowPlayingBox.clear();
-        await popularBox.clear();
-        await topRatedBox.clear();
-        await upcomingBox.clear();
+    //     // Clear old data
+    //     await nowPlayingBox.clear();
+    //     await popularBox.clear();
+    //     await topRatedBox.clear();
+    //     await upcomingBox.clear();
 
-        // Store new data (convert API model → MovieModel)
-        await nowPlayingBox.addAll(
-          nowPlaying.results.map(
-            (m) => MovieModel(
-              id: m.id,
-              title: m.title,
-              overview: m.overview,
-              posterPath: m.posterPath,
-            ),
-          ),
-        );
+    //     // Store new data (convert API model → MovieModel)
+    //     await nowPlayingBox.addAll(
+    //       nowPlaying.results.map(
+    //         (m) => MovieModel(
+    //           id: m.id,
+    //           title: m.title,
+    //           overview: m.overview,
+    //           posterPath: m.posterPath,
+    //         ),
+    //       ),
+    //     );
 
-        await popularBox.addAll(
-          popular.results.map(
-            (m) => MovieModel(
-              id: m.id,
-              title: m.title,
-              overview: m.overview,
-              posterPath: m.posterPath,
-            ),
-          ),
-        );
+    //     await popularBox.addAll(
+    //       popular.results.map(
+    //         (m) => MovieModel(
+    //           id: m.id,
+    //           title: m.title,
+    //           overview: m.overview,
+    //           posterPath: m.posterPath,
+    //         ),
+    //       ),
+    //     );
 
-        await topRatedBox.addAll(
-          topRated.results.map(
-            (m) => MovieModel(
-              id: m.id,
-              title: m.title,
-              overview: m.overview,
-              posterPath: m.posterPath,
-            ),
-          ),
-        );
+    //     await topRatedBox.addAll(
+    //       topRated.results.map(
+    //         (m) => MovieModel(
+    //           id: m.id,
+    //           title: m.title,
+    //           overview: m.overview,
+    //           posterPath: m.posterPath,
+    //         ),
+    //       ),
+    //     );
 
-        await upcomingBox.addAll(
-          upcoming.results.map(
-            (m) => MovieModel(
-              id: m.id,
-              title: m.title,
-              overview: m.overview,
-              posterPath: m.posterPath,
-            ),
-          ),
-        );
+    //     await upcomingBox.addAll(
+    //       upcoming.results.map(
+    //         (m) => MovieModel(
+    //           id: m.id,
+    //           title: m.title,
+    //           overview: m.overview,
+    //           posterPath: m.posterPath,
+    //         ),
+    //       ),
+    //     );
 
-        emit(
-          MoveieDbLoaded(
-            nowPlayingMovies: nowPlaying.results,
-            popularMovies: popular.results,
-            topRatedMovies: topRated.results,
-            upcomingMovies: upcoming.results,
-          ),
-        );
-      } catch (e) {
-        // Fallback to cached Hive data
-        final nowPlayingBox = Hive.box<MovieModel>('nowPlayingBox');
-        final popularBox = Hive.box<MovieModel>('popularBox');
-        final topRatedBox = Hive.box<MovieModel>('topRatedBox');
-        final upcomingBox = Hive.box<MovieModel>('upcomingBox');
+    //     emit(
+    //       MoveieDbLoaded(
+    //         nowPlayingMovies: nowPlaying.results,
+    //         popularMovies: popular.results,
+    //         topRatedMovies: topRated.results,
+    //         upcomingMovies: upcoming.results,
+    //       ),
+    //     );
+    //   } catch (e) {
+    //     // Fallback to cached Hive data
+    //     final nowPlayingBox = Hive.box<MovieModel>('nowPlayingBox');
+    //     final popularBox = Hive.box<MovieModel>('popularBox');
+    //     final topRatedBox = Hive.box<MovieModel>('topRatedBox');
+    //     final upcomingBox = Hive.box<MovieModel>('upcomingBox');
 
-        if (nowPlayingBox.isNotEmpty ||
-            popularBox.isNotEmpty ||
-            topRatedBox.isNotEmpty ||
-            upcomingBox.isNotEmpty) {
-          emit(
-            MoveieDbLoaded(
-              nowPlayingMovies: nowPlayingBox.values.toList(),
-              popularMovies: popularBox.values.toList(),
-              topRatedMovies: topRatedBox.values.toList(),
-              upcomingMovies: upcomingBox.values.toList(),
-            ),
-          );
-        } else {
-          emit(MoveieDbError(message: e.toString()));
-        }
-      }
-    });
+    //     if (nowPlayingBox.isNotEmpty ||
+    //         popularBox.isNotEmpty ||
+    //         topRatedBox.isNotEmpty ||
+    //         upcomingBox.isNotEmpty) {
+    //       emit(
+    //         MoveieDbLoaded(
+    //           nowPlayingMovies: nowPlayingBox.values.toList(),
+    //           popularMovies: popularBox.values.toList(),
+    //           topRatedMovies: topRatedBox.values.toList(),
+    //           upcomingMovies: upcomingBox.values.toList(),
+    //         ),
+    //       );
+    //     } else {
+    //       emit(MoveieDbError(message: e.toString()));
+    //     }
+    //   }
+    // });
   }
 }

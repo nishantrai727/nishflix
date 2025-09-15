@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +9,7 @@ import 'package:nishflix/bloc/movie_detail_bloc/movie_detail_event.dart';
 import 'package:nishflix/bloc/movie_detail_bloc/movie_detail_state.dart';
 import 'package:nishflix/core/models/movie_detail_model.dart';
 import 'package:nishflix/core/utils/constants/colors.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 
 class DetailScreen extends StatelessWidget {
@@ -38,13 +41,36 @@ class DetailScreen extends StatelessWidget {
                 context,
               );
             } else if (state is MovieDetailError) {
-              return Center(
-                child: Text(
-                  state.message,
-                  style: const TextStyle(color: Colors.red),
+              return RefreshIndicator(
+                color: Colors.red,
+                backgroundColor: BLACK_COLOR,
+                onRefresh: () async {
+                  context.read<MovieDetailBloc>().add(
+                    FetchMovieDetail(movieId),
+                  );
+                },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(), // 👈 required
+                  child: SizedBox(
+                    height: MediaQuery.of(
+                      context,
+                    ).size.height, // fill screen for pull
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Text(
+                            "Something went wrong! Pull down page to refresh.",
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               );
             }
+
             return const SizedBox();
           },
         ),
@@ -112,6 +138,31 @@ class DetailScreen extends StatelessWidget {
                       child: IconButton(
                         icon: const Icon(Icons.arrow_back, color: Colors.white),
                         onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ),
+                  ),
+                ),
+
+                Positioned(
+                  top: MediaQuery.of(context).padding.top + 8,
+                  right: 12,
+                  child: ClipOval(
+                    child: Container(
+                      color: Colors.black.withOpacity(0.3),
+                      child: IconButton(
+                        icon: const Icon(Icons.share, color: Colors.white),
+                        onPressed: () {
+                          final fakeLink =
+                              "https://nishflix.app/movie/${movie.id}";
+                          Share.share(
+                            '''Check out this movie:\n ${movie.title}\n$fakeLink.  
+                            \n\n
+                            Live Working Demo link(Hosted on demo website): \n
+                             unhealthy-attraction.surge.sh
+                            ''',
+                            subject: "Movie Recommendation",
+                          );
+                        },
                       ),
                     ),
                   ),

@@ -4,13 +4,25 @@ abstract class MoveieDbState {}
 
 class MoveieDbInitial extends MoveieDbState {}
 
-class MoveieDbLoading extends MoveieDbState {}
+class MoveieDbLoading extends MoveieDbState {
+  final List<MovieModel> nowPlayingMovies;
+  final List<MovieModel> popularMovies;
+  final List<MovieModel> topRatedMovies;
+  final List<MovieModel> upcomingMovies;
+
+  MoveieDbLoading({
+    this.nowPlayingMovies = const [],
+    this.popularMovies = const [],
+    this.topRatedMovies = const [],
+    this.upcomingMovies = const [],
+  });
+}
 
 class MoveieDbLoaded extends MoveieDbState {
-  List<MovieModel> nowPlayingMovies;
-  List<MovieModel> popularMovies;
-  List<MovieModel> topRatedMovies;
-  List<MovieModel> upcomingMovies;
+  final List<MovieModel> nowPlayingMovies;
+  final List<MovieModel> popularMovies;
+  final List<MovieModel> topRatedMovies;
+  final List<MovieModel> upcomingMovies;
 
   MoveieDbLoaded({
     required this.nowPlayingMovies,
@@ -21,6 +33,6 @@ class MoveieDbLoaded extends MoveieDbState {
 }
 
 class MoveieDbError extends MoveieDbState {
-  String message;
+  final String message;
   MoveieDbError({required this.message});
 }

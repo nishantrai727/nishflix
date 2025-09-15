@@ -43,7 +43,7 @@ class BookmarkScreen extends StatelessWidget {
             } else if (state is BookmarkEmpty) {
               return const Center(
                 child: Text(
-                  "No bookmarked movies yet",
+                  "No bookmarked movies.",
                   style: TextStyle(color: Colors.white70),
                 ),
               );

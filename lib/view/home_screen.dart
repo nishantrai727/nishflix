@@ -133,10 +133,31 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               } else if (state is MoveieDbError) {
-                return Center(
-                  child: Text(
-                    state.message,
-                    style: const TextStyle(color: WHITE_COLOR),
+                return RefreshIndicator(
+                  color: Colors.red,
+                  backgroundColor: BLACK_COLOR,
+                  onRefresh: () async {
+                    context.read<MovieDbBloc>().add(FetchMovieDbEvent());
+                  },
+                  child: SingleChildScrollView(
+                    physics:
+                        const AlwaysScrollableScrollPhysics(), // 👈 required
+                    child: SizedBox(
+                      height: MediaQuery.of(
+                        context,
+                      ).size.height, // fill screen for pull
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Text(
+                              "Something went wrong! Pull down page to refresh.",
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 );
               }

@@ -149,10 +149,33 @@ class _SearchScreenState extends State<_SearchView> {
                     },
                   );
                 } else if (state is SearchError) {
-                  return Center(
-                    child: Text(
-                      state.message,
-                      style: const TextStyle(color: Colors.red),
+                  return RefreshIndicator(
+                    color: Colors.red,
+                    backgroundColor: BLACK_COLOR,
+                    onRefresh: () async {
+                      context.read<SearchBloc>().add(
+                        SearchMoviesEvent(_controller.text),
+                      );
+                    },
+                    child: SingleChildScrollView(
+                      physics:
+                          const AlwaysScrollableScrollPhysics(), // 👈 required
+                      child: SizedBox(
+                        height: MediaQuery.of(
+                          context,
+                        ).size.height, // fill screen for pull
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                "Something went wrong! Pull down page to refresh.",
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   );
                 }

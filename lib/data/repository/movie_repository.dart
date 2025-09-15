@@ -24,7 +24,7 @@ class MovieRepository {
   Future<SearchMovieResponse> searchMovies(
     String query, {
     int page = 1,
-    bool includeAdult = true,
+    bool includeAdult = false,
     String language = "en-US",
   }) =>
       apiService.searchMovies(bearerToken, query, page, includeAdult, language);
