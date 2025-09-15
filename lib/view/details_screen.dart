@@ -129,13 +129,32 @@ class DetailScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title
-                Text(
-                  movie.title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        movie.title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    IconButton(
+                      icon: Icon(
+                        isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                        color: isBookmarked ? PRIMARY_COLOR : Colors.white70,
+                        size: 32,
+                      ),
+                      onPressed: () {
+                        context.read<MovieDetailBloc>().add(
+                          ToggleBookmarkEvent(movie),
+                        );
+                      },
+                    ),
+                  ],
                 ),
 
                 // Tagline + Bookmark button
@@ -152,18 +171,6 @@ class DetailScreen extends StatelessWidget {
                             fontStyle: FontStyle.italic,
                           ),
                         ),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                          color: isBookmarked ? PRIMARY_COLOR : Colors.white70,
-                          size: 32,
-                        ),
-                        onPressed: () {
-                          context.read<MovieDetailBloc>().add(
-                            ToggleBookmarkEvent(movie),
-                          );
-                        },
                       ),
                     ],
                   ),

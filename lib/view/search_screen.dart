@@ -120,19 +120,28 @@ class _SearchScreenState extends State<_SearchView> {
                     itemCount: state.movies.length,
                     itemBuilder: (context, index) {
                       final movie = state.movies[index];
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: CachedNetworkImage(
-                          imageUrl: movie.posterPath != null
-                              ? "https://image.tmdb.org/t/p/w500${movie.posterPath}"
-                              : "",
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => _buildShimmerBox(),
-                          errorWidget: (context, url, error) => Container(
-                            color: Colors.grey.shade800,
-                            child: const Icon(
-                              Icons.broken_image,
-                              color: Colors.white54,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/detail',
+                            arguments: movie.id,
+                          );
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: CachedNetworkImage(
+                            imageUrl: movie.posterPath != null
+                                ? "https://image.tmdb.org/t/p/w500${movie.posterPath}"
+                                : "",
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => _buildShimmerBox(),
+                            errorWidget: (context, url, error) => Container(
+                              color: Colors.grey.shade800,
+                              child: const Icon(
+                                Icons.broken_image,
+                                color: Colors.white54,
+                              ),
                             ),
                           ),
                         ),

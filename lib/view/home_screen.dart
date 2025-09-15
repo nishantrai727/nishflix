@@ -104,6 +104,21 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                             ),
                           ),
+                          Container(
+                            height: 40,
+                            width: 60,
+                            child: IconButton(
+                              icon: const Icon(
+                                fontWeight: FontWeight.w500,
+                                Icons.bookmark,
+                                color: PRIMARY_COLOR,
+                              ),
+                              iconSize: 38,
+                              onPressed: () {
+                                Navigator.pushNamed(context, "/bookmark");
+                              },
+                            ),
+                          ),
                         ],
                       ),
 

@@ -1,4 +1,4 @@
-package com.example.nishflix
+package com.nishflix.app
 
 import io.flutter.embedding.android.FlutterActivity
 
