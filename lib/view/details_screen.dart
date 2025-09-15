@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:nishflix/bloc/movie_detail_bloc/movie_detail_bloc.dart';
 import 'package:nishflix/bloc/movie_detail_bloc/movie_detail_event.dart';
 import 'package:nishflix/bloc/movie_detail_bloc/movie_detail_state.dart';
@@ -31,7 +32,11 @@ class DetailScreen extends StatelessWidget {
             if (state is MovieDetailLoading || state is MovieDetailInitial) {
               return _buildShimmer();
             } else if (state is MovieDetailLoaded) {
-              return _buildDetail(state.movieDetail, context);
+              return _buildDetail(
+                state.movieDetail,
+                state.isBookmarked,
+                context,
+              );
             } else if (state is MovieDetailError) {
               return Center(
                 child: Text(
@@ -48,7 +53,11 @@ class DetailScreen extends StatelessWidget {
   }
 
   /// 🎬 Actual Detail UI
-  Widget _buildDetail(MovieDetailModel movie, BuildContext context) {
+  Widget _buildDetail(
+    MovieDetailModel movie,
+    bool isBookmarked,
+    BuildContext context,
+  ) {
     return CustomScrollView(
       slivers: [
         // Backdrop / Poster
@@ -56,7 +65,7 @@ class DetailScreen extends StatelessWidget {
           backgroundColor: Colors.black,
           expandedHeight: 280,
           pinned: true,
-          automaticallyImplyLeading: false, // disable default back
+          automaticallyImplyLeading: false,
           flexibleSpace: FlexibleSpaceBar(
             background: Stack(
               fit: StackFit.expand,
@@ -99,7 +108,7 @@ class DetailScreen extends StatelessWidget {
                   left: 12,
                   child: ClipOval(
                     child: Container(
-                      color: Colors.black.withOpacity(0.3), // semi-transparent
+                      color: Colors.black.withOpacity(0.3),
                       child: IconButton(
                         icon: const Icon(Icons.arrow_back, color: Colors.white),
                         onPressed: () => Navigator.of(context).pop(),
@@ -119,7 +128,7 @@ class DetailScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title + tagline
+                // Title
                 Text(
                   movie.title,
                   style: const TextStyle(
@@ -128,17 +137,37 @@ class DetailScreen extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                if (movie.tagline != null && movie.tagline!.isNotEmpty) ...[
-                  const SizedBox(height: 6),
-                  Text(
-                    movie.tagline!,
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14,
-                      fontStyle: FontStyle.italic,
-                    ),
+
+                // Tagline + Bookmark button
+                if (movie.tagline != null && movie.tagline!.isNotEmpty)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          movie.tagline!,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                          color: isBookmarked ? PRIMARY_COLOR : Colors.white70,
+                          size: 32,
+                        ),
+                        onPressed: () {
+                          context.read<MovieDetailBloc>().add(
+                            ToggleBookmarkEvent(movie),
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                ],
+
                 const SizedBox(height: 12),
 
                 // Year • Runtime • Rating
@@ -237,7 +266,6 @@ class DetailScreen extends StatelessWidget {
   Widget _buildShimmer() {
     return CustomScrollView(
       slivers: [
-        // Backdrop shimmer
         SliverAppBar(
           backgroundColor: Colors.black,
           expandedHeight: 280,
@@ -248,22 +276,18 @@ class DetailScreen extends StatelessWidget {
             child: Container(color: Colors.grey.shade800),
           ),
         ),
-
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title shimmer
                 Shimmer.fromColors(
                   baseColor: Colors.grey.shade800,
                   highlightColor: Colors.grey.shade600,
                   child: Container(height: 24, width: 200, color: Colors.grey),
                 ),
                 const SizedBox(height: 12),
-
-                // Row shimmer
                 Row(
                   children: List.generate(
                     3,
@@ -281,10 +305,7 @@ class DetailScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
-                // Genres shimmer
                 Row(
                   children: List.generate(
                     3,
@@ -302,10 +323,7 @@ class DetailScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
-                // Overview shimmer
                 Column(
                   children: List.generate(
                     3,

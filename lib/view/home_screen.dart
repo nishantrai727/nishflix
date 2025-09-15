@@ -88,6 +88,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           "assets/netflix_logo.png",
                           width: 30,
                         ),
+                        actions: [
+                          Container(
+                            height: 40,
+                            width: 60,
+                            child: IconButton(
+                              icon: const Icon(
+                                fontWeight: FontWeight.w500,
+                                Icons.search,
+                                color: PRIMARY_COLOR,
+                              ),
+                              iconSize: 38,
+                              onPressed: () {
+                                Navigator.pushNamed(context, "/search");
+                              },
+                            ),
+                          ),
+                        ],
                       ),
 
                       ..._loadedSlivers(

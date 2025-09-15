@@ -8,8 +8,9 @@ class MovieDetailLoading extends MovieDetailState {}
 
 class MovieDetailLoaded extends MovieDetailState {
   final MovieDetailModel movieDetail;
+  final bool isBookmarked;
 
-  MovieDetailLoaded(this.movieDetail);
+  MovieDetailLoaded(this.movieDetail, {this.isBookmarked = false});
 }
 
 class MovieDetailError extends MovieDetailState {

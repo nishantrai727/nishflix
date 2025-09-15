@@ -27,6 +27,7 @@ void main() async {
   await Hive.openBox<MovieModel>('topRatedBox');
   await Hive.openBox<MovieModel>('upcomingBox');
   await Hive.openBox<MovieDetailModel>('movieDetailBox');
+  await Hive.openBox<MovieDetailModel>('bookmarkBox');
 
   runApp(MyApp());
 }
