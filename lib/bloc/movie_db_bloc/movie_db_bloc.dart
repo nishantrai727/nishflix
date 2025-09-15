@@ -73,7 +73,6 @@ class MovieDbBloc extends Bloc<MovieDbEvent, MoveieDbState> {
         await upcomingBox.clear();
         await upcomingBox.addAll(upcoming.results);
 
-        // ✅ Final Loaded State
         emit(
           MoveieDbLoaded(
             nowPlayingMovies: nowPlaying.results,
@@ -83,7 +82,6 @@ class MovieDbBloc extends Bloc<MovieDbEvent, MoveieDbState> {
           ),
         );
       } catch (e) {
-        // 🔄 Fallback to cache if API fails
         if (nowPlayingBox.isNotEmpty ||
             popularBox.isNotEmpty ||
             topRatedBox.isNotEmpty ||

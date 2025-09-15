@@ -23,7 +23,6 @@ class _FeaturedMovieCarouselState extends State<FeaturedMovieCarousel> {
     super.initState();
     _pageController = PageController(viewportFraction: 1);
 
-    // Auto-play every 4 seconds
     _autoPlayTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (_pageController.hasClients) {
         int nextPage = (_currentPage + 1) % widget.movies.length;
@@ -68,10 +67,9 @@ class _FeaturedMovieCarouselState extends State<FeaturedMovieCarousel> {
 
         if (_pageController.position.haveDimensions) {
           value = _pageController.page! - index;
-          // clamp value between -1 and 1
+
           value = (1 - (value.abs() * 0.3)).clamp(0.7, 1.0);
         } else {
-          // initial load
           value = index == 0 ? 1.0 : 0.7;
         }
 
@@ -101,9 +99,9 @@ class _FeaturedMovieCarouselState extends State<FeaturedMovieCarousel> {
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.8),
-              blurRadius: 30, // spread out more
-              spreadRadius: -10, // reduces top/sides
-              offset: const Offset(0, 40), // push shadow down
+              blurRadius: 30,
+              spreadRadius: -10,
+              offset: const Offset(0, 40),
             ),
           ],
         ),

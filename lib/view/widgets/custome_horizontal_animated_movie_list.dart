@@ -22,7 +22,6 @@ class _AnimatedHorizontalListState extends State<AnimatedHorizontalList>
   void initState() {
     super.initState();
 
-    // Animation setup
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
@@ -33,7 +32,6 @@ class _AnimatedHorizontalListState extends State<AnimatedHorizontalList>
       end: 1.0,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
-    // Play animation only once on first build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_firstBuildDone) {
         _controller.forward();
@@ -61,7 +59,6 @@ class _AnimatedHorizontalListState extends State<AnimatedHorizontalList>
         itemBuilder: (context, index) {
           final movie = widget.movies[index];
 
-          // First card with animation
           if (index == 0 && !_controller.isCompleted) {
             return ScaleTransition(
               scale: _scaleAnimation,
@@ -69,7 +66,6 @@ class _AnimatedHorizontalListState extends State<AnimatedHorizontalList>
             );
           }
 
-          // Normal cards
           return _movieCard(movie, leftMargin: 16);
         },
       ),

@@ -1,10 +1,4 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'movie_detail_model.dart';
-
-// **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
 
 MovieDetailModel _$MovieDetailModelFromJson(Map<String, dynamic> json) =>
     MovieDetailModel(

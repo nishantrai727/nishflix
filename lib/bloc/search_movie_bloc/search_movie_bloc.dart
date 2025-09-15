@@ -34,7 +34,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       try {
         final response = await movieRepository.searchMovies(event.query);
 
-        // ✅ Filter out movies that don’t have posterPath
         final filteredMovies = response.results
             .where((m) => m.posterPath != null && m.posterPath!.isNotEmpty)
             .toList();

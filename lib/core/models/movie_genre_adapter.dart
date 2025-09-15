@@ -1,11 +1,9 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 import 'package:hive/hive.dart';
 import 'movie_detail_model.dart';
 
 class GenreAdapter extends TypeAdapter<Genre> {
   @override
-  final int typeId = 3; // make sure this is unique
+  final int typeId = 3;
 
   @override
   Genre read(BinaryReader reader) {
@@ -19,7 +17,7 @@ class GenreAdapter extends TypeAdapter<Genre> {
   @override
   void write(BinaryWriter writer, Genre obj) {
     writer
-      ..writeByte(2) // number of fields
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -27,7 +25,6 @@ class GenreAdapter extends TypeAdapter<Genre> {
   }
 
   @override
-  // equality based on typeId (important for Hive)
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is GenreAdapter &&

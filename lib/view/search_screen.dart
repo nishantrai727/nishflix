@@ -62,7 +62,7 @@ class _SearchScreenState extends State<_SearchView> {
         centerTitle: true,
         leading: ClipOval(
           child: Container(
-            color: Colors.black.withOpacity(0.3), // semi-transparent
+            color: Colors.black.withOpacity(0.3),
             child: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () => Navigator.of(context).pop(),
@@ -72,7 +72,6 @@ class _SearchScreenState extends State<_SearchView> {
       ),
       body: Column(
         children: [
-          // Search input
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: TextField(
@@ -158,12 +157,9 @@ class _SearchScreenState extends State<_SearchView> {
                       );
                     },
                     child: SingleChildScrollView(
-                      physics:
-                          const AlwaysScrollableScrollPhysics(), // 👈 required
+                      physics: const AlwaysScrollableScrollPhysics(),
                       child: SizedBox(
-                        height: MediaQuery.of(
-                          context,
-                        ).size.height, // fill screen for pull
+                        height: MediaQuery.of(context).size.height,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -193,7 +189,6 @@ class _SearchScreenState extends State<_SearchView> {
     );
   }
 
-  /// 🔥 Shimmer Grid
   Widget _buildShimmerGrid() {
     return GridView.builder(
       padding: const EdgeInsets.all(12),

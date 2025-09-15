@@ -50,11 +50,9 @@ class DetailScreen extends StatelessWidget {
                   );
                 },
                 child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(), // 👈 required
+                  physics: const AlwaysScrollableScrollPhysics(),
                   child: SizedBox(
-                    height: MediaQuery.of(
-                      context,
-                    ).size.height, // fill screen for pull
+                    height: MediaQuery.of(context).size.height,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -78,7 +76,6 @@ class DetailScreen extends StatelessWidget {
     );
   }
 
-  /// 🎬 Actual Detail UI
   Widget _buildDetail(
     MovieDetailModel movie,
     bool isBookmarked,
@@ -128,7 +125,6 @@ class DetailScreen extends StatelessWidget {
                   ),
                 ),
 
-                // 🔙 Custom back button
                 Positioned(
                   top: MediaQuery.of(context).padding.top + 8,
                   left: 12,
@@ -208,7 +204,6 @@ class DetailScreen extends StatelessWidget {
                   ],
                 ),
 
-                // Tagline + Bookmark button
                 if (movie.tagline != null && movie.tagline!.isNotEmpty)
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -228,7 +223,6 @@ class DetailScreen extends StatelessWidget {
 
                 const SizedBox(height: 12),
 
-                // Year • Runtime • Rating
                 Row(
                   children: [
                     Text(
@@ -267,7 +261,6 @@ class DetailScreen extends StatelessWidget {
 
                 const SizedBox(height: 16),
 
-                // Genres
                 if (movie.genres.isNotEmpty)
                   Wrap(
                     spacing: 8,
@@ -294,7 +287,6 @@ class DetailScreen extends StatelessWidget {
 
                 const SizedBox(height: 16),
 
-                // Overview
                 Text(
                   movie.overview,
                   style: const TextStyle(
@@ -306,7 +298,6 @@ class DetailScreen extends StatelessWidget {
 
                 const SizedBox(height: 20),
 
-                // Status
                 if (movie.status != null)
                   Text(
                     "Status: ${movie.status}",
@@ -320,7 +311,6 @@ class DetailScreen extends StatelessWidget {
     );
   }
 
-  /// 🔥 Shimmer UI (Loading)
   Widget _buildShimmer() {
     return CustomScrollView(
       slivers: [

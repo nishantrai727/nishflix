@@ -62,7 +62,6 @@ class BookmarkScreen extends StatelessWidget {
     );
   }
 
-  /// 🎬 Grid of bookmarked movies
   Widget _buildGrid(List<MovieDetailModel> movies) {
     return GridView.builder(
       padding: const EdgeInsets.all(12),
@@ -106,7 +105,6 @@ class BookmarkScreen extends StatelessWidget {
     );
   }
 
-  /// 🔥 Shimmer grid
   Widget _buildShimmerGrid() {
     return GridView.builder(
       padding: const EdgeInsets.all(12),

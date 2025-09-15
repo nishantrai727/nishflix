@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'movie_model.g.dart';
 
-@HiveType(typeId: 0) // unique typeId for Hive
+@HiveType(typeId: 0)
 @JsonSerializable()
 class MovieModel {
   @HiveField(0)

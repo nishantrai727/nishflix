@@ -18,8 +18,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // --- Temporary mock data ---
-
   late ScrollController _scrollController;
   double _scrollOffset = 0;
 
@@ -42,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // opacity goes 0 → 1 as you scroll 200px
     final double opacity = (_scrollOffset / 200).clamp(0, 1);
 
     return BlocProvider(
@@ -140,12 +137,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     context.read<MovieDbBloc>().add(FetchMovieDbEvent());
                   },
                   child: SingleChildScrollView(
-                    physics:
-                        const AlwaysScrollableScrollPhysics(), // 👈 required
+                    physics: const AlwaysScrollableScrollPhysics(),
                     child: SizedBox(
-                      height: MediaQuery.of(
-                        context,
-                      ).size.height, // fill screen for pull
+                      height: MediaQuery.of(context).size.height,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -205,16 +199,14 @@ class _HomeScreenState extends State<HomeScreen> {
     BuildContext context,
   ) {
     return RefreshIndicator(
-      color: Colors.red, // Netflix vibe
+      color: Colors.red,
       backgroundColor: BLACK_COLOR,
       onRefresh: () async {
-        // Trigger BLoC fetch again
         context.read<MovieDbBloc>().add(FetchMovieDbEvent());
-        await Future.delayed(const Duration(seconds: 1)); // smooth UX
+        await Future.delayed(const Duration(seconds: 1));
       },
       child: SingleChildScrollView(
-        physics:
-            const AlwaysScrollableScrollPhysics(), // required for pull-to-refresh
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -239,18 +231,16 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// --- Shimmer Placeholder with Pull to Refresh ---
   Widget _buildShimmer(BuildContext context, double opacity) {
     return RefreshIndicator(
       onRefresh: () async {
         context.read<MovieDbBloc>().add(FetchMovieDbEvent());
-        await Future.delayed(const Duration(seconds: 1)); // smooth UX
+        await Future.delayed(const Duration(seconds: 1));
       },
       child: CustomScrollView(
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          // Same SliverAppBar as in loaded state
           SliverAppBar(
             pinned: true,
             elevation: 0,
@@ -259,21 +249,17 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Image.asset("assets/netflix_logo.png", width: 30),
           ),
 
-          // Now Playing shimmer
           SliverToBoxAdapter(child: _sectionTitle("Now Playing")),
           SliverToBoxAdapter(child: _featuredMovieShimmer(context)),
 
-          // Popular shimmer
           SliverToBoxAdapter(child: _divider()),
           SliverToBoxAdapter(child: _sectionTitle("Popular")),
           SliverToBoxAdapter(child: _horizontalListShimmer()),
 
-          // Top Rated shimmer
           SliverToBoxAdapter(child: _divider()),
           SliverToBoxAdapter(child: _sectionTitle("Top Rated")),
           SliverToBoxAdapter(child: _horizontalListShimmer()),
 
-          // Upcoming shimmer
           SliverToBoxAdapter(child: _divider()),
           SliverToBoxAdapter(child: _sectionTitle("Upcoming")),
           SliverToBoxAdapter(child: _horizontalListShimmer()),
@@ -282,12 +268,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // --- Shimmer Widgets ---
-  // --- Featured Carousel Shimmer ---
   Widget _featuredMovieShimmer(BuildContext context) => SizedBox(
-    height: MediaQuery.of(context).size.height * 0.60, // match carousel height
+    height: MediaQuery.of(context).size.height * 0.60,
     child: PageView.builder(
-      itemCount: 3, // show 2-3 shimmer slides
+      itemCount: 3,
       controller: PageController(viewportFraction: 1),
       itemBuilder: (context, index) {
         return Container(
@@ -315,9 +299,8 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   );
 
-  // --- Horizontal List Shimmer ---
   Widget _horizontalListShimmer() => SizedBox(
-    height: 230, // match _horizontalList container
+    height: 230,
     child: ListView.builder(
       scrollDirection: Axis.horizontal,
       itemCount: 6,
@@ -328,7 +311,6 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Poster shimmer (match height 180, radius 12)
               Container(
                 height: 180,
                 decoration: BoxDecoration(
@@ -352,7 +334,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 6),
 
-              // Title shimmer (match style height)
               Shimmer.fromColors(
                 baseColor: Colors.grey.shade800,
                 highlightColor: Colors.grey.shade600,
@@ -369,7 +350,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   );
 
-  // --- UI helpers ---
   Widget _sectionTitle(String title) => Padding(
     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
     child: Text(
@@ -422,7 +402,6 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Card with shadow + gradient overlay
               Container(
                 height: 180,
                 decoration: BoxDecoration(
@@ -434,7 +413,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       offset: const Offset(0, 6),
                     ),
                     BoxShadow(
-                      color: Colors.red.withOpacity(0.2), // subtle glow
+                      color: Colors.red.withOpacity(0.2),
                       blurRadius: 16,
                       spreadRadius: -4,
                       offset: const Offset(0, 0),
@@ -445,7 +424,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(12),
                   child: Stack(
                     children: [
-                      // Poster image
                       Positioned.fill(
                         child: CachedNetworkImage(
                           imageUrl:
@@ -480,7 +458,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
 
-                      // Bottom gradient overlay (makes it feel alive & cinematic)
                       Positioned.fill(
                         child: DecoratedBox(
                           decoration: BoxDecoration(
@@ -501,7 +478,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 6),
 
-              // Title below poster
               Text(
                 movie.title,
                 maxLines: 1,

@@ -1,10 +1,9 @@
-// lib/core/models/db_movie_model_adapter.dart
 import 'package:hive/hive.dart';
 import 'package:nishflix/core/models/movie_model.dart';
 
 class MovieModelAdapter extends TypeAdapter<MovieModel> {
   @override
-  final int typeId = 0; // must be unique across your app
+  final int typeId = 0;
 
   @override
   MovieModel read(BinaryReader reader) {

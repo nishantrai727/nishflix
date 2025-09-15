@@ -1,10 +1,4 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'search_movie_model.dart';
-
-// **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
 
 SearchMovieModel _$SearchMovieModelFromJson(Map<String, dynamic> json) =>
     SearchMovieModel(

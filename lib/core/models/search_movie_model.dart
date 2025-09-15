@@ -3,9 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'search_movie_model.g.dart';
 
-@HiveType(
-  typeId: 1,
-) // ⚡ Make sure this ID is unique (different from MovieModel's 0)
+@HiveType(typeId: 1)
 @JsonSerializable()
 class SearchMovieModel {
   @HiveField(0)
